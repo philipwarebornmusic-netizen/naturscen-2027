@@ -114,14 +114,14 @@ Verifierat:
 - Över nio scenmål ökade fria strålar från 11 253 till 11 489 av 19 008.
 - Om alla huvuden sätts till 1,50 m är C inte bättre totalt. Förslaget är därför en förbättringsmöjlighet, inte en siktgaranti.
 
-### Thread 6 - Delningssajt och GitHub
-- Publik sajt: `https://philipwarebornmusic-netizen.github.io/naturscen-2027/`
-- Direkt till 3D: `https://philipwarebornmusic-netizen.github.io/naturscen-2027/3d/`
+### Thread 6 - Delningssajt, GitHub och Netlify
+- Primär publik sajt: `https://naturscen.netlify.app/`
+- Direkt till 3D: `https://naturscen.netlify.app/3d/`
+- GitHub Pages-spegel: `https://philipwarebornmusic-netizen.github.io/naturscen-2027/`
 - GitHub: `https://github.com/philipwarebornmusic-netizen/naturscen-2027`
 - `docs/` innehåller den publicerade sajten, 3D v4.3, A/B/C-PDF:er, C-förhandsbild och kapacitets-CSV.
 - `sync_share_site.py` kopierar verifierade projektfiler till `docs/` inför publicering.
-- GitHub Pages publicerar automatiskt `docs/` från `main`.
-- `netlify.toml` är färdig för import av samma repo. Netlify är inte kopplat eftersom ingen Netlify-inloggning finns på arbetsstationen.
+- Netlify publicerar automatiskt `docs/` från `main`; GitHub Pages publicerar samma mapp som spegel.
 
 ## Verifiering utförd
 - SVG:

@@ -4,8 +4,9 @@ Shareable 3D seating and sightline model plus verified PDF material for proposal
 
 ## Live site
 
-- GitHub Pages: <https://philipwarebornmusic-netizen.github.io/naturscen-2027/>
-- 3D model: <https://philipwarebornmusic-netizen.github.io/naturscen-2027/3d/>
+- Netlify: <https://naturscen.netlify.app/>
+- 3D model: <https://naturscen.netlify.app/3d/>
+- GitHub Pages mirror: <https://philipwarebornmusic-netizen.github.io/naturscen-2027/>
 - Repository: <https://github.com/philipwarebornmusic-netizen/naturscen-2027>
 
 The site compares:
@@ -40,14 +41,15 @@ GitHub Pages publishes `docs/` from `main`. Netlify uses `netlify.toml` and the 
 
 ## Netlify
 
-The repository is ready for Netlify but is not tied to a Netlify account. To add a Netlify deployment:
+Netlify production is connected to the GitHub repository:
 
-1. Open <https://app.netlify.com/start>.
-2. Choose **Import an existing project** and select `philipwarebornmusic-netizen/naturscen-2027`.
-3. Keep the detected configuration from `netlify.toml`.
-4. Deploy. The publish directory is `docs`; no build command is required.
+- Production URL: <https://naturscen.netlify.app/>
+- Branch: `main`
+- Publish directory: `docs`
+- Configuration: `netlify.toml`
+- Build command: none
 
-GitHub Pages is already live, so Netlify is optional unless a Netlify domain or its deployment controls are required.
+Every push to `main` triggers a new production deploy. GitHub Pages remains available as a mirror.
 
 ## Local smoke test
 
