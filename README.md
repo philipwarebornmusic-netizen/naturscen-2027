@@ -38,6 +38,17 @@ git push
 
 GitHub Pages publishes `docs/` from `main`. Netlify uses `netlify.toml` and the same `docs/` publish directory.
 
+## Netlify
+
+The repository is ready for Netlify but is not tied to a Netlify account. To add a Netlify deployment:
+
+1. Open <https://app.netlify.com/start>.
+2. Choose **Import an existing project** and select `philipwarebornmusic-netizen/naturscen-2027`.
+3. Keep the detected configuration from `netlify.toml`.
+4. Deploy. The publish directory is `docs`; no build command is required.
+
+GitHub Pages is already live, so Netlify is optional unless a Netlify domain or its deployment controls are required.
+
 ## Local smoke test
 
 ```bash
