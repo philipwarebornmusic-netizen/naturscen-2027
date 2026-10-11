@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interaktiv 3D-modell och platskartor för Naturscen 2027. Jämför original, 5° siktgräns och 28 cm förskjutna rader.">
+  <meta property="og:title" content="Naturscen 2027 · 3D-modell och platskartor">
+  <meta property="og:description" content="Utforska 2 112 platser i 3D och ladda ner platskartor med dokumenterad siktanalys.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/platskarta-c-v1.5.png">
+  <meta name="theme-color" content="#102019">
+  <title>Naturscen 2027 · 3D-modell och platskartor</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1410;
+      --surface: #122019;
+      --surface-2: #182a21;
+      --line: rgba(238, 242, 231, .12);
+      --text: #edf2ea;
+      --muted: #aab8ad;
+      --faint: #7f9185;
+      --green: #8bc7a0;
+      --green-deep: #245b43;
+      --gold: #e4ad4b;
+      --paper: #f2eee4;
+      --ink: #17221d;
+      --radius: 22px;
+      --shadow: 0 28px 80px rgba(0, 0, 0, .28);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; }
+    .skip { position: fixed; left: 16px; top: -80px; z-index: 20; padding: 10px 14px; border-radius: 10px; background: var(--paper); color: var(--ink); }
+    .skip:focus { top: 16px; }
+    .shell { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    header.site-head { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--line); background: rgba(11, 20, 16, .86); backdrop-filter: blur(18px); }
+    .nav { min-height: 68px; display: flex; align-items: center; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; letter-spacing: .03em; }
+    .brand-mark { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(145deg, var(--gold), #99702b); display: grid; place-items: center; color: #1b160c; font-size: 13px; }
+    .brand b { color: var(--gold); }
+    .nav-links { margin-left: auto; display: flex; align-items: center; gap: 22px; color: var(--muted); font-size: 14px; }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { padding: 9px 14px; border: 1px solid rgba(228, 173, 75, .45); border-radius: 999px; color: var(--gold) !important; }
+    .hero { position: relative; overflow: hidden; padding: 78px 0 72px; }
+    .hero::before { content: ""; position: absolute; width: 700px; height: 700px; right: -260px; top: -330px; border-radius: 50%; background: radial-gradient(circle, rgba(83, 140, 104, .24), transparent 68%); pointer-events: none; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, .92fr) minmax(480px, 1.08fr); gap: 58px; align-items: center; }
+    .eyebrow { margin: 0 0 18px; color: var(--gold); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    h1 { max-width: 720px; margin: 0; font-size: clamp(45px, 6vw, 76px); line-height: .98; letter-spacing: -.045em; }
+    .lead { max-width: 620px; margin: 24px 0 0; color: var(--muted); font-size: 18px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 9px; padding: 0 18px; border: 1px solid var(--line); border-radius: 12px; text-decoration: none; font-weight: 750; transition: transform .16s ease, border-color .16s ease, background .16s ease; }
+    .button:hover { transform: translateY(-2px); border-color: rgba(238, 242, 231, .28); }
+    .button.primary { border-color: var(--gold); background: var(--gold); color: #20170b; }
+    .button.secondary { background: rgba(255, 255, 255, .035); }
+    .note { margin-top: 13px; color: var(--faint); font-size: 12px; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 34px; }
+    .stat { padding: 15px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255, 255, 255, .025); }
+    .stat strong { display: block; font-size: 24px; letter-spacing: -.03em; }
+    .stat span { color: var(--faint); font-size: 12px; }
+    .preview { position: relative; padding: 10px; border: 1px solid var(--line); border-radius: 28px; background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); box-shadow: var(--shadow); transform: rotate(1deg); }
+    .preview a { display: block; overflow: hidden; border-radius: 20px; background: var(--paper); }
+    .preview img { width: 100%; aspect-ratio: 1.347 / 1; object-fit: cover; }
+    .preview-badge { position: absolute; left: 28px; bottom: 26px; padding: 10px 13px; border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: rgba(9, 17, 13, .88); backdrop-filter: blur(12px); font-size: 12px; }
+    .preview-badge strong { display: block; color: var(--gold); font-size: 13px; }
+    section.block { padding: 76px 0; border-top: 1px solid var(--line); }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 30px; }
+    .section-head h2 { margin: 0; font-size: clamp(30px, 4vw, 48px); line-height: 1; letter-spacing: -.035em; }
+    .section-head p { max-width: 520px; margin: 0; color: var(--muted); }
+    .materials { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .material { display: flex; min-height: 280px; flex-direction: column; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .material.featured { border-color: rgba(228, 173, 75, .46); background: linear-gradient(160deg, #1b2b22, #151f1a); }
+    .tag { align-self: flex-start; padding: 5px 9px; border-radius: 999px; background: rgba(139, 199, 160, .12); color: var(--green); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .featured .tag { background: rgba(228, 173, 75, .12); color: var(--gold); }
+    .material h3 { margin: 20px 0 8px; font-size: 23px; line-height: 1.1; }
+    .material p { margin: 0; color: var(--muted); font-size: 14px; }
+    .material dl { display: grid; grid-template-columns: 1fr auto; gap: 7px 12px; margin: 22px 0; font-size: 13px; }
+    .material dt { color: var(--faint); }
+    .material dd { margin: 0; font-weight: 700; }
+    .material .button { margin-top: auto; }
+    .analysis { display: grid; grid-template-columns: .92fr 1.08fr; gap: 14px; }
+    .analysis-copy, .analysis-data { padding: 32px; border-radius: var(--radius); }
+    .analysis-copy { background: var(--paper); color: var(--ink); }
+    .analysis-copy h2 { margin: 0 0 18px; font-size: 38px; line-height: 1; letter-spacing: -.035em; }
+    .analysis-copy p { margin: 0; color: #48544e; }
+    .analysis-copy strong { color: #1f5b41; }
+    .analysis-data { border: 1px solid var(--line); background: var(--surface); }
+    .analysis-row { display: grid; grid-template-columns: 1fr auto; gap: 22px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .analysis-row:first-child { padding-top: 0; }
+    .analysis-row:last-child { padding-bottom: 0; border-bottom: 0; }
+    .analysis-row span { color: var(--muted); }
+    .analysis-row strong { color: var(--green); font-size: 20px; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; counter-reset: step; }
+    .step { counter-increment: step; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,.025); }
+    .step::before { content: "0" counter(step); display: block; margin-bottom: 24px; color: var(--gold); font-weight: 800; letter-spacing: .08em; }
+    .step h3 { margin: 0 0 8px; font-size: 20px; }
+    .step p { margin: 0; color: var(--muted); font-size: 14px; }
+    .disclaimer { margin-top: 22px; padding: 18px 20px; border-left: 3px solid var(--gold); border-radius: 0 12px 12px 0; background: rgba(228, 173, 75, .07); color: var(--muted); font-size: 13px; }
+    footer { padding: 30px 0 42px; border-top: 1px solid var(--line); color: var(--faint); font-size: 12px; }
+    .foot { display: flex; justify-content: space-between; gap: 24px; }
+    .foot a { color: var(--muted); }
+    @media (max-width: 920px) {
+      .hero-grid, .analysis { grid-template-columns: 1fr; }
+      .hero-grid { gap: 42px; }
+      .preview { transform: none; }
+      .materials, .steps { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 14px; }
+    }
+    @media (max-width: 620px) {
+      .shell { width: min(100% - 28px, 1180px); }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero { padding-top: 52px; }
+      h1 { font-size: 45px; }
+      .lead { font-size: 16px; }
+      .stats { grid-template-columns: 1fr; }
+      .preview-badge { left: 20px; bottom: 18px; }
+      section.block { padding: 58px 0; }
+      .analysis-copy, .analysis-data { padding: 24px; }
+      .foot { display: block; }
+      .foot span { display: block; margin-top: 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .button { transition: none; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Hoppa till innehållet</a>
+  <header class="site-head">
+    <nav class="shell nav" aria-label="Huvudmeny">
+      <a class="brand" href="./"><span class="brand-mark">N</span><span>NATUR<b>SCEN</b></span></a>
+      <div class="nav-links">
+        <a href="#material">PDF-material</a>
+        <a href="#analys">Siktanalys</a>
+        <a class="nav-cta" href="3d/">Öppna 3D</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <p class="eyebrow">Interaktiv arbetsmodell · Naturscen 2027</p>
+          <h1>Se platskartan från varje stol.</h1>
+          <p class="lead">Jämför originalplanen, den snävare siktgränsen och förslag C med 28 cm förskjutna rader. Välj exakt parkett, sektion, rad och stol direkt i 3D.</p>
+          <div class="actions">
+            <a class="button primary" href="3d/">Starta 3D-modellen <span aria-hidden="true">→</span></a>
+            <a class="button secondary" href="Platskarta_Naturscen_2027_FORSKJUTNA_RADER_28CM_v1.5.pdf">Ladda ner PDF · 3 sidor</a>
+          </div>
+          <p class="note">3D-modellen fungerar bäst på en dator med modern webbläsare.</p>
+          <div class="stats" aria-label="Nyckeltal">
+            <div class="stat"><strong>2 112</strong><span>platser i förslag C</span></div>
+            <div class="stat"><strong>28 cm</strong><span>relativ radförskjutning</span></div>
+            <div class="stat"><strong>3</strong><span>alternativ att jämföra</span></div>
+          </div>
+        </div>
+        <div class="preview">
+          <a href="3d/" aria-label="Öppna den interaktiva 3D-modellen">
+            <img src="assets/platskarta-c-v1.5.png" alt="Platskarta för Naturscen med 2 112 färgkodade stolar och förskjutna rader" width="1320" height="980">
+          </a>
+          <div class="preview-badge"><strong>Förslag C · v1.5</strong>Alla stolar innanför siktgränsen</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="material">
+      <div class="shell">
+        <div class="section-head">
+          <h2>Platskartor och underlag</h2>
+          <p>PDF-filerna öppnas direkt i webbläsaren och kan laddas ner eller delas vidare. Förslag C innehåller även den dokumenterade siktanalysen.</p>
+        </div>
+        <div class="materials">
+          <article class="material">
+            <span class="tag">Alternativ A</span>
+            <h3>Originalplan</h3>
+            <p>Ursprunglig stolsplan med yttergränsen förankrad i scenens framhörn.</p>
+            <dl><dt>Kapacitet</dt><dd>2 353</dd><dt>Version</dt><dd>v1.4</dd></dl>
+            <a class="button secondary" href="Platskarta_Naturscen_2027_ORIGINAL_HORNFIX_v1.4.pdf">Öppna PDF</a>
+          </article>
+          <article class="material">
+            <span class="tag">Alternativ B</span>
+            <h3>5° snävare siktgräns</h3>
+            <p>Stolar utanför den snävare, hörnförankrade siktgränsen har tagits bort.</p>
+            <dl><dt>Kapacitet</dt><dd>2 112</dd><dt>Version</dt><dd>v1.4</dd></dl>
+            <a class="button secondary" href="Platskarta_Naturscen_2027_ALTERNATIV_HORNFIX_5GRADER_v1.4.pdf">Öppna PDF</a>
+          </article>
+          <article class="material featured">
+            <span class="tag">Förslag C · aktuellt</span>
+            <h3>28 cm förskjutna rader</h3>
+            <p>Samma 2 112 plats-ID som B, med förskjutna rader och siktanalys på PDF-sida 3.</p>
+            <dl><dt>Kapacitet</dt><dd>2 112</dd><dt>Version</dt><dd>v1.5</dd></dl>
+            <a class="button primary" href="Platskarta_Naturscen_2027_FORSKJUTNA_RADER_28CM_v1.5.pdf">Öppna PDF</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="analys">
+      <div class="shell analysis">
+        <div class="analysis-copy">
+          <p class="eyebrow">Modellresultat</p>
+          <h2>Bättre sikt i standardscenariot.</h2>
+          <p>Förskjutningen förbättrar framför allt sikten mot scenmitt. <strong>159 fler modellerade platser</strong> klarar scenmittsprovet jämfört med B. Förbättringen gäller inte varje plats och är ingen garanti vid andra personhöjder eller vertikala förutsättningar.</p>
+        </div>
+        <div class="analysis-data" aria-label="Siktanalysens resultat">
+          <div class="analysis-row"><span>Fri scenmitt · B</span><strong>1 201 · 56,9 %</strong></div>
+          <div class="analysis-row"><span>Fri scenmitt · C</span><strong>1 360 · 64,4 %</strong></div>
+          <div class="analysis-row"><span>Förändring</span><strong>+159 · +7,5 pp</strong></div>
+          <div class="analysis-row"><span>Nio scenmål</span><strong>+236 fria strålar</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="shell">
+        <div class="section-head">
+          <h2>Så använder du modellen</h2>
+          <p>All data ligger i en fristående modell. Ingen installation eller inloggning krävs.</p>
+        </div>
+        <div class="steps">
+          <article class="step"><h3>Välj alternativ</h3><p>Växla mellan A, B och C utan att tappa kameraläget.</p></article>
+          <article class="step"><h3>Välj biljettplats</h3><p>Skriv parkett, sektion, rad och stol eller klicka direkt i modellen.</p></article>
+          <article class="step"><h3>Kontrollera sikten</h3><p>Gå till sittvyn och jämför scenmitt, nio scenmål och personer framför.</p></article>
+        </div>
+        <div class="disclaimer"><strong>Arbetsmodell:</strong> Underlaget är en digital plan- och siktstudie, inte en inmätt eller myndighetsgodkänd publik-, utrymnings- eller utsättningsplan. Kontrollmätning krävs före skarpa beslut.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell foot">
+      <div>Naturscen 2027 · Förslag C v1.5 · 3D v4.3</div>
+      <span><a href="https://github.com/philipwarebornmusic-netizen/naturscen-2027">Projekt på GitHub</a> · <a href="Platskarta_Naturscen_2027_KAPACITET_FORSKJUTNA_RADER_28CM_v1.5.csv">Kapacitetsdata CSV</a></span>
+    </div>
+  </footer>
+</body>
+</html>

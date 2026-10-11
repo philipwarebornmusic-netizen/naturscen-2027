@@ -1,0 +1,12 @@
+[build]
+  publish = "docs"
+
+[[redirects]]
+  from = "/modell"
+  to = "/3d/"
+  status = 301
+
+[[redirects]]
+  from = "/pdf"
+  to = "/Platskarta_Naturscen_2027_FORSKJUTNA_RADER_28CM_v1.5.pdf"
+  status = 302

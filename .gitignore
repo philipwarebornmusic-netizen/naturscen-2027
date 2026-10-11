@@ -1,0 +1,19 @@
+# The working folder contains historical drafts and source imagery.
+# Publish only the verified current site, generator and project documentation.
+*
+!.gitignore
+!README.md
+!netlify.toml
+!build_staggered_v1_5.py
+!sync_share_site.py
+!ny_karta_radplan_v1.md
+!FORTSATT_HAR_NATURSCEN_2026-10-08.md
+!docs/
+!docs/**
+!3d/
+3d/*
+!3d/BYGGLOGG.md
+
+__pycache__/
+*.pyc
+.DS_Store
